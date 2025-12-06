@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOMIEE FINDER — Sign Up</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700&display=swap');
+    *{ margin:0; padding:0; box-sizing:border-box; font-family:"Poppins", sans-serif; }
+
+    body{
+      height:100vh;
+      background:url('https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg') center/cover no-repeat;
+      display:flex; justify-content:center; align-items:center;
+      position:relative;
+    }
+    .overlay{ position:absolute; inset:0; background:rgba(0,0,0,0.45); }
+
+    .app-name{
+      position:absolute; top:20px; width:100%; text-align:center; z-index:3;
+      font-size:45px; font-weight:900; letter-spacing:2px;
+      font-family:"Montserrat", sans-serif;
+      background: linear-gradient(90deg,#ffefba,#ffffff);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      opacity:.97;
+      text-shadow:0 0 20px rgba(255,255,255,0.25);
+    }
+
+    .left-text{
+      position:absolute; bottom:60px; left:60px; color:white; z-index:2; max-width:430px;
+    }
+    .left-text h1{ font-size:40px; font-weight:600; line-height:45px; }
+    .left-text p{ margin-top:10px; font-size:16px; opacity:.95; }
+
+    .card{
+      width:100%; max-width:430px; padding:35px; border-radius:14px; z-index:2;
+      background:rgba(255,255,255,0.18);
+      backdrop-filter:blur(12px);
+      border:1px solid rgba(255,255,255,0.35);
+      box-shadow:0 0 30px rgba(0,0,0,0.35);
+    }
+
+    .card h2{ color:#fff; font-size:32px; margin-bottom:6px; }
+    .subtitle{ color:#f2f2f2; margin-bottom:22px; font-size:14.7px; }
+
+    form{ display:grid; gap:14px; }
+    input,select{
+      width:100%; padding:12px; border-radius:8px; font-size:14.5px;
+      border:1px solid rgba(255,255,255,0.45);
+      background:rgba(255,255,255,0.13); outline:none; color:white;
+      transition:.2s;
+    }
+    input::placeholder,select{ color:#eaeaea; }
+    input:focus,select:focus{ border-color:#fff; background:rgba(255,255,255,0.18); }
+
+    .submit{
+      margin-top:6px; padding:12px; font-size:15px; font-weight:600; border-radius:8px;
+      background:linear-gradient(90deg,#6a11cb,#2575fc);
+      border:none; color:white; cursor:pointer; transition:.2s;
+    }
+    .submit:hover{ opacity:.85; }
+
+    .signin{text-align:center; margin-top:12px; font-size:14px; color:#fff; }
+    .signin a{ color:#fff; font-weight:600; text-decoration:underline; }
+
+    @media(max-width:850px){
+      .left-text{ bottom:25px; left:25px; }
+      .left-text h1{ font-size:30px; line-height:35px; }
+      .app-name{ font-size:35px; top:25px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="overlay"></div>
+<div class="app-name">HOMIEE FINDER</div>
+
+<div class="left-text">
+  <h1>Create your profile<br>Find the perfect roommate</h1>
+  <p>Join the community & match with people who share similar lifestyle, food habits and daily routine.</p>
+</div>
+
+<div class="card">
+  <h2>Sign Up</h2>
+  <div class="subtitle">Create your new account</div>
+
+  <form onsubmit="signup(event)">
+    <input type="text" placeholder="Full Name" required>
+    <input type="email" placeholder="Email" required>
+    <input type="password" placeholder="Password" required>
+    <select required>
+      <option value="">Select Role</option>
+      <option value="guest">GUEST</option>
+      <option value="owner">OWNER</option>
+    </select>
+    <button class="submit">Create Account</button>
+  </form>
+
+  <div class="signin">
+    Already have an account? <a href="index.html">Log In</a>
+  </div>
+</div>
+
+<script>
+function signup(e){
+  e.preventDefault();
+  alert("Signup submitted (demo)");
+}
+</script>
+
+</body>
+</html>

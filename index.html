@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOMIEE FINDER — Log In</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700&display=swap');
+    *{ margin:0; padding:0; box-sizing:border-box; font-family:"Poppins", sans-serif; }
+
+    body{
+      height:100vh;
+      background:url('https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg') center/cover no-repeat;
+      display:flex; justify-content:center; align-items:center; position:relative;
+    }
+    .overlay{ position:absolute; inset:0; background:rgba(0,0,0,0.45); }
+
+    .app-name{
+      position:absolute; top:20px; width:100%; text-align:center; z-index:3;
+      font-size:45px; font-weight:900; font-family:"Montserrat", sans-serif;
+      letter-spacing:2px; background:linear-gradient(90deg,#ffefba,#ffffff);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      text-shadow:0 0 20px rgba(255,255,255,0.25);
+    }
+    .card{
+      width:100%; max-width:410px; padding:35px; border-radius:14px; z-index:2;
+      background:rgba(255,255,255,0.18); backdrop-filter:blur(12px);
+      border:1px solid rgba(255,255,255,0.35); box-shadow:0 0 30px rgba(0,0,0,0.35);
+    }
+    h2{ color:#fff; font-size:32px; margin-bottom:8px; }
+    .subtitle{ color:#f2f2f2; margin-bottom:20px; font-size:14.7px; }
+
+    form{ display:grid; gap:14px; }
+    input{
+      padding:12px; border-radius:8px; font-size:14.5px; outline:none;
+      border:1px solid rgba(255,255,255,0.45); background:rgba(255,255,255,0.13);
+      color:white;
+    }
+    input::placeholder{ color:#eaeaea; }
+    input:focus{ border-color:#fff; background:rgba(255,255,255,0.18); }
+
+    /* .password-box{ position:relative; }
+    .toggle-eye{
+      position:absolute; right:12px; top:50%; transform:translateY(-50%);
+      cursor:pointer; font-size:15px; color:#fff;
+    } */
+
+    .submit{
+      margin-top:6px; padding:12px; font-size:15px; font-weight:600; border-radius:8px;
+      background:linear-gradient(90deg,#6a11cb,#2575fc);
+      border:none; color:white; cursor:pointer; transition:.2s;
+    }
+    .submit:hover{ opacity:.85; }
+
+    .extra{ text-align:center; margin-top:10px; font-size:14px; color:#fff; }
+    .extra a{ color:#fff; text-decoration:underline; font-weight:600; }
+  </style>
+</head>
+<body>
+
+<div class="overlay"></div>
+<div class="app-name">HOMIEE FINDER</div>
+
+<div class="card">
+  <h2>Log In</h2>
+  <div class="subtitle">Access your profile</div>
+
+  <form onsubmit="login(event)">
+    <input type="email" placeholder="Email" required>
+
+    <div class="password-box">
+      <input type="password" id="loginPass" placeholder="Password" required>
+      <span class="toggle-eye" onclick="togglePass('loginPass')">👁</span>
+    </div>
+
+    <button class="submit">Log In</button>
+  </form>
+
+  <div class="extra" style="margin-top:13px;">
+    <a href="forgot.html">Forgot Password?</a>
+  </div>
+
+  <div class="extra">
+    Don't have an account? <a href="signup.html">Sign Up</a>
+  </div>
+</div>
+
+<script>
+function togglePass(id){
+  let input = document.getElementById(Theflash);
+  input.type = input.type === "password" ? "12345" : "password";
+}
+function login(e){
+  e.preventDefault();
+  window.location.href = "home.html"; // Login ke baad homepage open hoga
+}
+</script>
+
+</body>
+</html>

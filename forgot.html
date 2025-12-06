@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOMIEE FINDER — Forgot Password</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700&display=swap');
+    *{ margin:0; padding:0; box-sizing:border-box; font-family:"Poppins", sans-serif; }
+
+    body{
+      height:100vh;
+      background:url('https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg') center/cover no-repeat;
+      display:flex; justify-content:center; align-items:center; position:relative;
+    }
+    .overlay{ position:absolute; inset:0; background:rgba(0,0,0,0.45); }
+
+    .app-name{
+      position:absolute; top:20px; width:100%; text-align:center; z-index:3;
+      font-size:45px; font-weight:900; font-family:"Montserrat", sans-serif;
+      background:linear-gradient(90deg,#ffefba,#ffffff);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      text-shadow:0 0 20px rgba(255,255,255,0.25);
+    }
+
+    .card{
+      width:100%; max-width:410px; padding:35px; border-radius:14px; z-index:2;
+      background:rgba(255,255,255,0.18); backdrop-filter:blur(12px);
+      border:1px solid rgba(255,255,255,0.35); box-shadow:0 0 30px rgba(0,0,0,0.35);
+    }
+    h2{ color:#fff; font-size:32px; margin-bottom:8px; }
+    .subtitle{ color:#f2f2f2; margin-bottom:20px; font-size:14.7px; }
+
+    form{ display:grid; gap:14px; }
+    input{
+      padding:12px; border-radius:8px; font-size:14.5px; outline:none;
+      border:1px solid rgba(255,255,255,0.45); background:rgba(255,255,255,0.13);
+      color:white;
+    }
+    input::placeholder{ color:#eaeaea; }
+    input:focus{ border-color:#fff; background:rgba(255,255,255,0.18); }
+
+    .submit{
+      margin-top:6px; padding:12px; font-size:15px; font-weight:600; border-radius:8px;
+      background:linear-gradient(90deg,#6a11cb,#2575fc);
+      border:none; color:white; cursor:pointer; transition:.2s;
+    }
+    .submit:hover{ opacity:.85; }
+
+    .extra{ text-align:center; margin-top:13px; font-size:14px; color:#fff; }
+    .extra a{ color:#fff; text-decoration:underline; font-weight:600; }
+  </style>
+</head>
+<body>
+
+<div class="overlay"></div>
+<div class="app-name">HOMIEE FINDER</div>
+
+<div class="card">
+  <h2>Forgot Password</h2>
+  <div class="subtitle">Enter your email to reset password</div>
+
+  <form onsubmit="resetPass(event)">
+    <input type="email" placeholder="Email" required>
+    <button class="submit">Send Reset Link</button>
+  </form>
+
+  <div class="extra">
+    Remember your password? <a href="index.html">Log In</a>
+  </div>
+</div>
+
+<script>
+function resetPass(e){
+  e.preventDefault();
+  alert("Password reset link has been sent to your email.");
+}
+</script>
+
+</body>
+</html>

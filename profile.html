@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HOMIEE FINDER — Profile Dashboard (Edit Profile Advanced)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700&display=swap');
+
+    :root{
+      --glass-bg: rgba(255,255,255,0.12);
+      --glass-border: rgba(255,255,255,0.28);
+      --accent1: #6a11cb;
+      --accent2: #2575fc;
+      --white-85: rgba(255,255,255,0.95);
+    }
+
+    *{ box-sizing:border-box; margin:0; padding:0; font-family:'Poppins',sans-serif; color:#fff; }
+    body{
+      min-height:100vh;
+      background: url('https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg') center/cover no-repeat;
+      display:flex; flex-direction:column; position:relative;
+    }
+
+    .overlay{ position:absolute; inset:0; background:rgba(0,0,0,0.45); z-index:0; }
+
+    /* NAV */
+    .navbar{
+      position:relative; z-index:3; padding:18px 32px; display:flex; justify-content:space-between; align-items:center;
+    }
+    .logo{
+      font-family:'Montserrat',sans-serif; font-weight:800; font-size:30px;
+      background:linear-gradient(90deg,#ffefba,#ffffff);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
+    .nav-actions{ display:flex; gap:12px; align-items:center; }
+    .btn{
+      padding:8px 14px; border-radius:8px; border:none; cursor:pointer; font-weight:600;
+    }
+    .logout-btn{ background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#fff; }
+
+    /* Layout */
+    .wrap{ z-index:2; width:100%; padding:28px; display:flex; gap:26px; align-items:flex-start; }
+    .left, .right { background:var(--glass-bg); border:1px solid var(--glass-border); backdrop-filter:blur(10px); border-radius:14px; padding:20px; }
+    .left{ width:320px; display:flex; flex-direction:column; align-items:center; gap:12px; }
+    .right{ flex:1; display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
+
+    /* Profile */
+    .pfp{
+      width:140px; height:140px; border-radius:50%; overflow:hidden; border:3px solid rgba(255,255,255,0.28);
+      background:linear-gradient(180deg,rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    }
+    .pfp img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+    .name{ font-size:20px; font-weight:700; margin-top:6px; }
+    .role{ font-size:13px; opacity:0.9; margin-bottom:6px; }
+
+    .edit-btn{ margin-top:6px; padding:8px 12px; border-radius:8px; border:none; background:rgba(255,255,255,0.12); cursor:pointer; color:#fff; }
+    .edit-btn:hover{ background:rgba(255,255,255,0.18); }
+
+    /* detail cards */
+    .card{ padding:18px; border-radius:12px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.06); min-height:120px; }
+    .card h3{ font-size:16px; margin-bottom:8px; }
+    .card p{ font-size:14px; line-height:20px; opacity:0.95; }
+
+    /* Edit Modal */
+    .modal{ position:fixed; inset:0; display:none; z-index:9999; justify-content:center; align-items:flex-start; padding-top:40px; }
+    .modal-bg{ position:absolute; inset:0; background:rgba(0,0,0,0.6); }
+    .modal-box{
+      position:relative; width:920px; max-width:95%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+      backdrop-filter:blur(14px); border-radius:12px; padding:18px; color:#fff; max-height:85vh; overflow:auto;
+    }
+    .modal-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+    .modal-head h2{ font-size:20px; }
+    .close-btn{ background:#ffffff2d; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; color:#fff; }
+
+    /* form grid */
+    .form-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:12px; }
+    .form-grid-2{ grid-column:span 2; }
+    .form-row{ display:flex; flex-direction:column; gap:8px; }
+    label{ font-size:13px; opacity:0.9; }
+    input[type="text"], input[type="email"], input[type="tel"], input[type="date"], input[type="number"], select, textarea, input[type="time"]{
+      padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.03); color:#fff; outline:none;
+    }
+    textarea{ min-height:90px; resize:vertical; padding:10px; }
+
+    /* toggles / radios */
+    .inline{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .chip{ padding:8px 10px; border-radius:999px; border:1px solid rgba(255,255,255,0.12); cursor:pointer; background:transparent; }
+    .chip.active{ background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#fff; border:none; }
+
+    /* sliders */
+    .range-wrap{ display:flex; gap:10px; align-items:center; }
+    input[type="range"]{ width:100%; }
+
+    /* file upload */
+    .file-row{ display:flex; gap:12px; align-items:center; }
+    .file-preview{ width:92px; height:92px; border-radius:8px; overflow:hidden; border:1px solid rgba(255,255,255,0.12); }
+    .file-preview img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+    /* save area */
+    .actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:10px; }
+    .save-btn{ padding:10px 16px; border-radius:8px; border:none; background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#fff; cursor:pointer; }
+    .cancel-btn{ padding:10px 14px; border-radius:8px; border:none; background:#ffffff2d; color:#fff; cursor:pointer; }
+
+    /* small screens */
+    @media (max-width:1000px){
+      .form-grid{ grid-template-columns:repeat(2,1fr); }
+      .right{ grid-template-columns:repeat(1,1fr); }
+      .modal-box{ width:95%; padding:14px; }
+    }
+    @media (max-width:700px){
+      .wrap{ flex-direction:column; padding:16px; }
+      .left{ width:100%; display:flex; flex-direction:row; gap:12px; align-items:center; padding:12px; }
+      .pfp{ width:88px; height:88px; }
+    } 
+  </style>
+</head>
+<body>
+
+  <div class="overlay"></div>
+
+  <!-- NAV -->
+  <div class="navbar" style="z-index:2;">
+    <div class="logo">HOMIEE FINDER</div>
+    <div class="nav-actions">
+     <!-- <button class="btn" onclick="openEdit()">Edit Profile</button>-->
+      <button class="btn logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="wrap" style="z-index:2;">
+    <!-- LEFT -->
+    <aside class="left">
+      <div class="pfp" title="Profile photo">
+        <img id="displayPfp" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile">
+      </div>
+      <div class="name" id="displayName">Your Name</div>
+      <div class="role" id="displayRole">Guest</div>
+
+      <button class="edit-btn" onclick="openEdit()">Edit Profile</button>
+
+      <div style="width:100%; margin-top:14px;">
+        <div class="card" style="padding:12px;">
+          <h3 style="margin-bottom:8px;">Contact</h3>
+          <p id="displayEmail">Email: example@mail.com</p>
+          <p id="displayMobile">Mobile: —</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT (details) -->
+    <section class="right">
+      <div class="card">
+        <h3>Basic Info</h3>
+        <p id="basicAge">Age: —</p>
+        <p id="basicCity">City: —</p>
+        <p id="basicCollege">College: —</p>
+        <p id="basicDob">DOB: —</p>
+      </div>
+
+      <div class="card">
+        <h3>Lifestyle</h3>
+        <p id="lifeFood">Food: —</p>
+        <p id="lifeSmoke">Smoking: —</p>
+        <p id="lifeDrink">Drinking: —</p>
+        <p id="lifeTimes">Wake: — | Sleep: —</p>
+      </div>
+
+      <div class="card">
+        <h3>Budget & Stay</h3>
+        <p id="stayBudget">Budget: —</p>
+        <p id="stayCity">Preferred City: —</p>
+        <p id="stayMove">Move-in: —</p>
+        <p id="stayRoom">Room: —</p>
+      </div>
+
+      <div class="card">
+        <h3>Personality & Interests</h3>
+        <p id="persType">Personality: —</p>
+        <p id="persClean">Cleanliness: —</p>
+        <p id="persSocial">Social: —</p>
+        <p id="persBio">Bio: —</p>
+        <p id="persTags">Interests: —</p>
+        <p id="persLang">Languages: —</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- EDIT MODAL -->
+  <div class="modal" id="modal">
+    <div class="modal-bg" onclick="closeEdit()"></div>
+    <div class="modal-box" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h2>Edit Profile</h2>
+        <div>
+          <button class="close-btn" onclick="closeEdit()">Close</button>
+        </div>
+      </div>
+
+      <form id="editForm" onsubmit="handleSave(event)">
+        <!-- row 1 -->
+        <div class="form-grid">
+          <div class="form-row">
+            <label>Full Name</label>
+            <input id="inpName" type="text" placeholder="Your full name">
+          </div>
+
+          <div class="form-row">
+            <label>Email (non-editable)</label>
+            <input id="inpEmail" type="email" placeholder="email@example.com" readonly>
+          </div>
+
+          <div class="form-row">
+            <label>Mobile</label>
+            <input id="inpMobile" type="tel" placeholder="Mobile number">
+          </div>
+
+          <div class="form-row">
+            <label>Gender</label>
+            <div class="inline" id="genderWrap">
+              <button type="button" class="chip" data-value="Male" onclick="selectSingle(this,'gender')">Male</button>
+              <button type="button" class="chip" data-value="Female" onclick="selectSingle(this,'gender')">Female</button>
+              <button type="button" class="chip" data-value="Other" onclick="selectSingle(this,'gender')">Other</button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Date of Birth</label>
+            <input id="inpDob" type="date">
+          </div>
+
+          <div class="form-row">
+            <label>College / Uni</label>
+            <input id="inpCollege" type="text" placeholder="College or University">
+          </div>
+        </div>
+
+        <!-- row 2 -->
+        <div class="form-grid">
+          <div class="form-row">
+            <label>Food Preference</label>
+            <div class="inline" id="foodWrap">
+              <button type="button" class="chip" data-value="Veg" onclick="toggleChip(this,'food')">Veg</button>
+              <button type="button" class="chip" data-value="Non-Veg" onclick="toggleChip(this,'food')">Non-Veg</button>
+              <button type="button" class="chip" data-value="Both" onclick="toggleChip(this,'food')">Both</button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Smoking</label>
+            <div class="inline">
+              <button type="button" class="chip" data-value="No" onclick="selectSingle(this,'smoke')">No</button>
+              <button type="button" class="chip" data-value="Yes" onclick="selectSingle(this,'smoke')">Yes</button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Drinking</label>
+            <div class="inline">
+              <button type="button" class="chip" data-value="No" onclick="selectSingle(this,'drink')">No</button>
+              <button type="button" class="chip" data-value="Yes" onclick="selectSingle(this,'drink')">Yes</button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Wake-up Time</label>
+            <input id="inpWake" type="time">
+          </div>
+
+          <div class="form-row">
+            <label>Sleep Time</label>
+            <input id="inpSleep" type="time">
+          </div>
+
+          <div class="form-row">
+            <label>Age</label>
+            <input id="inpAge" type="number" min="15" max="100">
+          </div>
+        </div>
+
+        <!-- row 3 -->
+        <div class="form-grid">
+          <div class="form-row form-grid-2">
+            <label>City</label>
+            <input id="inpCity" type="text" placeholder="City">
+          </div>
+
+          <div class="form-row">
+            <label>Preferred Location / Locality</label>
+            <input id="inpLoc" type="text" placeholder="Preferred locality">
+          </div>
+
+          <div class="form-row">
+            <label>Budget (₹) — Min</label>
+            <input id="inpBudgetMin" type="number" placeholder="Min">
+          </div>
+
+          <div class="form-row">
+            <label>Budget (₹) — Max</label>
+            <input id="inpBudgetMax" type="number" placeholder="Max">
+          </div>
+
+          <div class="form-row">
+            <label>Move-in Date</label>
+            <input id="inpMove" type="date">
+          </div>
+
+          <div class="form-row">
+            <label>Room Preference</label>
+            <div class="inline">
+              <button type="button" class="chip" data-value="Single" onclick="selectSingle(this,'room')">Single</button>
+              <button type="button" class="chip" data-value="Shared" onclick="selectSingle(this,'room')">Shared</button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Attached Washroom</label>
+            <div class="inline">
+              <button type="button" class="chip" data-value="Yes" onclick="selectSingle(this,'attach')">Yes</button>
+              <button type="button" class="chip" data-value="No" onclick="selectSingle(this,'attach')">No</button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>AC</label>
+            <div class="inline">
+              <button type="button" class="chip" data-value="Yes" onclick="selectSingle(this,'ac')">Yes</button>
+              <button type="button" class="chip" data-value="No" onclick="selectSingle(this,'ac')">No</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- row 4: personality + sliders -->
+        <div class="form-grid">
+          <div class="form-row">
+            <label>Personality</label>
+            <div class="inline">
+              <button type="button" class="chip" data-value="Introvert" onclick="selectSingle(this,'personality')">Introvert</button>
+              <button type="button" class="chip" data-value="Extrovert" onclick="selectSingle(this,'personality')">Extrovert</button>
+              <button type="button" class="chip" data-value="Ambivert" onclick="selectSingle(this,'personality')">Ambivert</button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Cleanliness Level (<span id="cleanVal">5</span>)</label>
+            <div class="range-wrap">
+              <input id="inpClean" type="range" min="1" max="10" value="5" oninput="updateCleanVal(this.value)">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Social Level (<span id="socialVal">5</span>)</label>
+            <div class="range-wrap">
+              <input id="inpSocial" type="range" min="1" max="10" value="5" oninput="updateSocialVal(this.value)">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Short Bio</label>
+            <textarea id="inpBio" placeholder="Write something about yourself..."></textarea>
+          </div>
+        </div>
+
+        <!-- row 5: Interests (chips) + add custom -->
+        <div style="margin-top:6px;">
+          <label style="display:block; margin-bottom:8px;">Interests / Hobbies (click to toggle)</label>
+          <div id="tagsWrap" class="inline" style="gap:8px; margin-bottom:8px;">
+            <!-- default tags -->
+          </div>
+
+          <div style="display:flex; gap:8px; margin-top:6px;">
+            <input id="newTag" type="text" placeholder="Add custom interest (press Add)" style="flex:1;">
+            <button type="button" class="chip" onclick="addCustomTag()">Add</button>
+          </div>
+        </div>
+
+        <!-- row 6: Languages -->
+        <div style="margin-top:12px;">
+          <label style="display:block; margin-bottom:8px;">Languages (select multiple)</label>
+          <div id="langWrap" class="inline" style="gap:8px; margin-bottom:8px;">
+            <!-- languages checkboxes rendered here -->
+          </div>
+
+          <div style="display:flex; gap:8px; margin-top:6px;">
+            <input id="newLang" type="text" placeholder="Add custom language (press Add)" style="flex:1;">
+            <button type="button" class="chip" onclick="addCustomLang()">Add</button>
+          </div>
+        </div>
+
+        <!-- row 7: Profile photo -->
+        <div style="margin-top:12px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+          <div>
+            <label>Profile Photo</label>
+            <div class="file-row" style="margin-top:8px;">
+              <div class="file-preview" id="pfPreview"><img id="pfPreviewImg" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt=""></div>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <input id="inpFile" type="file" accept="image/*" onchange="handleFile(event)">
+                <small style="opacity:0.85">Max 2MB recommended. JPG/PNG</small>
+              </div>
+            </div>
+          </div>
+
+          <div style="flex:1;">
+            <label>Social / Interests Summary</label>
+            <textarea id="inpSummary" placeholder="Add your social links or short summary (Instagram/LinkedIn)"></textarea>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="cancel-btn" onclick="closeEdit()">Cancel</button>
+          <button type="submit" class="save-btn">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+<script>
+/* ======= Initial Data & Defaults ======= */
+const defaultProfile = {
+  name: "Your Name",
+  role: "Guest",
+  email: "example@mail.com",
+  mobile: "",
+  gender: "",
+  dob: "",
+  college: "",
+  age: "",
+  food: "",
+  smoke: "",
+  drink: "",
+  wake: "",
+  sleep: "",
+  city: "",
+  loc: "",
+  budgetMin: "",
+  budgetMax: "",
+  move: "",
+  room: "",
+  attach: "",
+  ac: "",
+  personality: "",
+  clean: 5,
+  social: 5,
+  bio: "",
+  interests: ["Travel","Gym","Movies","Cooking","Music"],
+  languages: ["Hindi","English"],
+  summary: "",
+  pfp: "" // base64 image or url
+};
+
+let profile = { ...defaultProfile };
+
+/* load from localStorage */
+function loadProfile(){
+  try{
+    const raw = localStorage.getItem('homiee_profile');
+    if(raw) profile = JSON.parse(raw);
+  }catch(e){ console.error(e); }
+  applyToUI();
+}
+
+/* save to localStorage */
+function saveProfile(){
+  localStorage.setItem('homiee_profile', JSON.stringify(profile));
+}
+
+/* apply profile to dashboard UI */
+function applyToUI(){
+  document.getElementById('displayName').innerText = profile.name || defaultProfile.name;
+  document.getElementById('displayRole').innerText = profile.role || "Guest";
+  document.getElementById('displayPfp').src = profile.pfp || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+  document.getElementById('displayEmail').innerText = "Email: " + (profile.email || "—");
+  document.getElementById('displayMobile').innerText = "Mobile: " + (profile.mobile || "—");
+
+  // Basic
+  document.getElementById('basicAge').innerText = "Age: " + (profile.age || "—");
+  document.getElementById('basicCity').innerText = "City: " + (profile.city || "—");
+  document.getElementById('basicCollege').innerText = "College: " + (profile.college || "—");
+  document.getElementById('basicDob').innerText = "DOB: " + (profile.dob || "—");
+
+  // Lifestyle
+  document.getElementById('lifeFood').innerText = "Food: " + (profile.food || "—");
+  document.getElementById('lifeSmoke').innerText = "Smoking: " + (profile.smoke || "—");
+  document.getElementById('lifeDrink').innerText = "Drinking: " + (profile.drink || "—");
+  document.getElementById('lifeTimes').innerText = "Wake: " + (profile.wake || "—") + " | Sleep: " + (profile.sleep || "—");
+
+  // Stay
+  document.getElementById('stayBudget').innerText = "Budget: " + ((profile.budgetMin||"—") + " — " + (profile.budgetMax||"—"));
+  document.getElementById('stayCity').innerText = "Preferred City: " + (profile.loc || "—");
+  document.getElementById('stayMove').innerText = "Move-in: " + (profile.move || "—");
+  document.getElementById('stayRoom').innerText = "Room: " + (profile.room || "—");
+
+  // Personality & others
+  document.getElementById('persType').innerText = "Personality: " + (profile.personality || "—");
+  document.getElementById('persClean').innerText = "Cleanliness: " + (profile.clean || "—");
+  document.getElementById('persSocial').innerText = "Social: " + (profile.social || "—");
+  document.getElementById('persBio').innerText = "Bio: " + (profile.bio || "—");
+  document.getElementById('persTags').innerText = "Interests: " + (profile.interests && profile.interests.length ? profile.interests.join(', ') : "—");
+  document.getElementById('persLang').innerText = "Languages: " + (profile.languages && profile.languages.length ? profile.languages.join(', ') : "—");
+
+  // modal form initial fields will be set when opening modal
+}
+
+/* ======= Modal open/close and populate form ======= */
+function openEdit(){
+  const modal = document.getElementById('modal');
+  modal.style.display = 'flex';
+  populateForm();
+}
+function closeEdit(){
+  document.getElementById('modal').style.display = 'none';
+}
+
+/* populate form with profile values */
+function populateForm(){
+  document.getElementById('inpName').value = profile.name || "";
+  document.getElementById('inpEmail').value = profile.email || "";
+  document.getElementById('inpMobile').value = profile.mobile || "";
+  document.getElementById('inpDob').value = profile.dob || "";
+  document.getElementById('inpCollege').value = profile.college || "";
+  document.getElementById('inpAge').value = profile.age || "";
+  document.getElementById('inpWake').value = profile.wake || "";
+  document.getElementById('inpSleep').value = profile.sleep || "";
+  document.getElementById('inpCity').value = profile.city || "";
+  document.getElementById('inpLoc').value = profile.loc || "";
+  document.getElementById('inpBudgetMin').value = profile.budgetMin || "";
+  document.getElementById('inpBudgetMax').value = profile.budgetMax || "";
+  document.getElementById('inpMove').value = profile.move || "";
+  document.getElementById('inpBio').value = profile.bio || "";
+  document.getElementById('inpSummary').value = profile.summary || "";
+  document.getElementById('pfPreviewImg').src = profile.pfp || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+  document.getElementById('inpClean').value = profile.clean || 5;
+  document.getElementById('cleanVal').innerText = profile.clean || 5;
+  document.getElementById('inpSocial').value = profile.social || 5;
+  document.getElementById('socialVal').innerText = profile.social || 5;
+
+  // reset chip selections
+  resetChips();
+
+  // set chips & toggles based on profile
+  setChipByValue('gender', profile.gender);
+  setChipByValue('food', profile.food);
+  setChipByValue('smoke', profile.smoke);
+  setChipByValue('drink', profile.drink);
+  setChipByValue('room', profile.room);
+  setChipByValue('attach', profile.attach);
+  setChipByValue('ac', profile.ac);
+  setChipByValue('personality', profile.personality);
+
+  // interests tags
+  renderTags();
+
+  // languages
+  renderLanguages();
+}
+
+/* helper to reset chip classes */
+function resetChips(){
+  document.querySelectorAll('.chip').forEach(c=>{
+    c.classList.remove('active');
+  });
+}
+
+/* select single (radio style) */
+function selectSingle(el, group){
+  // unset current in group
+  document.querySelectorAll('.chip[data-group="'+group+'"]').forEach(x=>x.classList.remove('active'));
+  // but we used data-group not set; instead mark by function below
+  // implement: remove active for chips with onclick group name matches by passing group param in data attr
+  // simpler: remove active from chips we created for group by matching parent container
+  // We'll remove active from siblings in same container:
+  const parent = el.parentElement;
+  parent.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+
+  // update profile value immediately
+  const value = el.dataset.value;
+  switch(group){
+    case 'gender': profile.gender = value; break;
+    case 'smoke': profile.smoke = value; break;
+    case 'drink': profile.drink = value; break;
+    case 'room': profile.room = value; break;
+    case 'attach': profile.attach = value; break;
+    case 'ac': profile.ac = value; break;
+    case 'personality': profile.personality = value; break;
+  }
+}
+
+/* set chip by value on open */
+function setChipByValue(group, value){
+  if(!value) return;
+  // search appropriate container
+  const mapping = {
+    gender: 'genderWrap',
+    food: 'foodWrap',
+    smoke: undefined,
+    drink: undefined,
+    room: undefined,
+    attach: undefined,
+    ac: undefined,
+    personality: undefined
+  };
+  // for groups where container id is known:
+  let containerId = mapping[group];
+  if(!containerId){
+    // find a chip with onclick param matching group
+    document.querySelectorAll('.chip').forEach(c=>{
+      if(c.getAttribute('onclick') && c.getAttribute('onclick').includes("'" + group + "'") && c.dataset.value === value){
+        c.classList.add('active');
+      }
+    });
+  } else {
+    const cont = document.getElementById(containerId);
+    if(cont){
+      cont.querySelectorAll('.chip').forEach(c=>{
+        if(c.dataset.value === value) c.classList.add('active');
+        else c.classList.remove('active');
+      });
+    }
+  }
+}
+
+/* toggle chip (multi-choice or single but toggleable) */
+function toggleChip(el, group){
+  el.classList.toggle('active');
+
+  // handle 'food' (we want single selection but toggleable) -> pick last active
+  if(group === 'food'){
+    const active = Array.from(document.querySelectorAll('#foodWrap .chip.active')).map(x=>x.dataset.value);
+    // if multiple selected, join with comma or choose last? We'll keep comma support
+    profile.food = active.join(', ') || "";
+  }
+}
+
+/* ===== Tags (interests) ===== */
+const defaultTags = ["Travel","Gym","Movies","Cooking","Music","Reading","Photography","Gaming","Sports","Dancing"];
+
+function renderTags(){
+  const wrap = document.getElementById('tagsWrap');
+  wrap.innerHTML = '';
+  const tags = profile.interests && profile.interests.length ? profile.interests : defaultTags;
+  tags.forEach(tag=>{
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'chip' + (profile.interests && profile.interests.includes(tag) ? ' active' : '');
+    btn.textContent = tag;
+    btn.onclick = ()=>{ toggleInterest(tag, btn); };
+    wrap.appendChild(btn);
+  });
+}
+
+function toggleInterest(tag, el){
+  profile.interests = profile.interests || [];
+  if(profile.interests.includes(tag)){
+    profile.interests = profile.interests.filter(t=>t!==tag);
+    el.classList.remove('active');
+  } else {
+    profile.interests.push(tag);
+    el.classList.add('active');
+  }
+}
+
+/* add custom tag */
+function addCustomTag(){
+  const v = document.getElementById('newTag').value.trim();
+  if(!v) return alert('Enter a tag');
+  profile.interests = profile.interests || [];
+  if(!profile.interests.includes(v)){
+    profile.interests.push(v);
+  }
+  document.getElementById('newTag').value = '';
+  renderTags();
+}
+
+/* ===== Languages ===== */
+const defaultLangs = ["Hindi","English","Urdu","Bengali","Tamil","Telugu","Marathi","Kannada","Gujarati","Punjabi"];
+
+function renderLanguages(){
+  const wrap = document.getElementById('langWrap');
+  wrap.innerHTML = '';
+  const langs = profile.languages && profile.languages.length ? [...new Set([...profile.languages, ...defaultLangs])] : defaultLangs;
+  langs.forEach(lang=>{
+    const label = document.createElement('label');
+    label.style.display='inline-flex';
+    label.style.alignItems='center';
+    label.style.gap='8px';
+
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.value = lang;
+    cb.checked = profile.languages && profile.languages.includes(lang);
+    cb.onchange = ()=>{
+      if(cb.checked){
+        profile.languages = profile.languages || [];
+        if(!profile.languages.includes(lang)) profile.languages.push(lang);
+      } else {
+        profile.languages = profile.languages.filter(l=>l!==lang);
+      }
+    };
+    label.appendChild(cb);
+    const span = document.createElement('span');
+    span.textContent = lang;
+    label.appendChild(span);
+    wrap.appendChild(label);
+  });
+}
+
+function addCustomLang(){
+  const v = document.getElementById('newLang').value.trim();
+  if(!v) return alert('Enter language');
+  profile.languages = profile.languages || [];
+  if(!profile.languages.includes(v)){
+    profile.languages.push(v);
+  }
+  document.getElementById('newLang').value = '';
+  renderLanguages();
+}
+
+/* ===== file upload preview ===== */
+function handleFile(e){
+  const f = e.target.files[0];
+  if(!f) return;
+  if(f.size > 2 * 1024 * 1024){ alert('Image too large (max 2MB).'); return; }
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    const data = ev.target.result;
+    document.getElementById('pfPreviewImg').src = data;
+    profile.pfp = data;
+  }
+  reader.readAsDataURL(f);
+}
+
+/* ===== sliders display ===== */
+function updateCleanVal(v){ document.getElementById('cleanVal').innerText = v; profile.clean = v; }
+function updateSocialVal(v){ document.getElementById('socialVal').innerText = v; profile.social = v; }
+
+/* ===== Save handler ===== */
+function handleSave(e){
+  e.preventDefault();
+
+  // gather fields
+  profile.name = document.getElementById('inpName').value.trim() || profile.name;
+  profile.mobile = document.getElementById('inpMobile').value.trim() || profile.mobile;
+  profile.dob = document.getElementById('inpDob').value || profile.dob;
+  profile.college = document.getElementById('inpCollege').value.trim() || profile.college;
+  profile.age = document.getElementById('inpAge').value || profile.age;
+  profile.wake = document.getElementById('inpWake').value || profile.wake;
+  profile.sleep = document.getElementById('inpSleep').value || profile.sleep;
+  profile.city = document.getElementById('inpCity').value.trim() || profile.city;
+  profile.loc = document.getElementById('inpLoc').value.trim() || profile.loc;
+  profile.budgetMin = document.getElementById('inpBudgetMin').value || profile.budgetMin;
+  profile.budgetMax = document.getElementById('inpBudgetMax').value || profile.budgetMax;
+  profile.move = document.getElementById('inpMove').value || profile.move;
+  profile.bio = document.getElementById('inpBio').value || profile.bio;
+  profile.summary = document.getElementById('inpSummary').value || profile.summary;
+
+  // ensure interests/languages are arrays
+  profile.interests = profile.interests || [];
+  profile.languages = profile.languages || [];
+
+  // if profile.pfp changed via file input, it's already updated in handleFile
+
+  // persist & update UI
+  saveProfile();
+  applyToUI();
+
+  // close modal & confirmation
+  closeEdit();
+  alert('Profile saved (locally).');
+}
+
+/* ===== logout ===== */
+function logout(){ window.location.href = 'index.html'; }
+/* ===== init ===== */
+(function init(){
+  loadProfile();
+
+  // if profile does not have default interests/languages, initialize
+  if(!profile.interests || profile.interests.length === 0) profile.interests = defaultTags.slice(0,5);
+  if(!profile.languages || profile.languages.length === 0) profile.languages = defaultLangs.slice(0,2);
+
+  saveProfile();
+  applyToUI();
+})();
+</script>
+
+</body>
+</html>

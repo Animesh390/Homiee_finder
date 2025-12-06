@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOMIEE FINDER — Matches</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700&display=swap');
+*{ margin:0; padding:0; box-sizing:border-box; font-family:"Poppins", sans-serif; }
+
+body{
+  height:100vh; background:url('https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg') center/cover no-repeat;
+  display:flex; justify-content:center; align-items:center; position:relative;
+}
+.overlay{ position:absolute; inset:0; background:rgba(0,0,0,0.50); }
+
+.app-name{
+  position:absolute; top:20px; width:100%; text-align:center; z-index:3;
+  font-size:45px; font-weight:900; font-family:"Montserrat";
+  background:linear-gradient(90deg,#ffefba,#ffffff);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+
+.card{
+  width:90%; max-width:430px; padding:24px; border-radius:14px; z-index:3; text-align:center;
+  background:rgba(255,255,255,0.18); backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.35); box-shadow:0 0 22px rgba(0,0,0,0.45);
+  color:white;
+}
+.user-img{
+  width:120px; height:120px; border-radius:50%; margin:auto; margin-bottom:14px;
+  background:url('https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg') center/cover no-repeat;
+  border:2px solid white;
+}
+h2{ font-size:27px; margin-bottom:6px; }
+p{ font-size:14.5px; margin-bottom:15px; }
+.btns{ display:flex; gap:18px; justify-content:center; }
+button{
+  padding:10px 22px; border-radius:8px; font-size:14.5px;
+  border:none; cursor:pointer; transition:.25s; font-weight:600;
+}
+.like{ background:#27ae60; color:white; }
+.skip{ background:#e74c3c; color:white; }
+button:hover{ opacity:.82; }
+
+.back{
+  margin-top:22px; text-decoration:underline; cursor:pointer; color:white; font-size:14.5px;
+}
+</style>
+</head>
+<body>
+
+<div class="overlay"></div>
+<div class="app-name">HOMIEE FINDER</div>
+
+<div class="card">
+  <div class="user-img"></div>
+  <h2>Rahul Sharma, 21</h2>
+  <p>Looking for a roommate near Bamrauli | Budget: ₹4,000–₹6,000 | Non-smoker | Night Owl 🌙</p>
+
+  <div class="btns">
+    <button class="skip">Skip</button>
+    <button class="like">Send Request</button>
+  </div>
+
+  <div class="back" onclick="location.href='home.html'">← Back to Home</div>
+</div>
+
+</body>
+</html>
